@@ -31,7 +31,7 @@
 (defn move-spaceship-down [state]
   (move-spaceship 0 1 state))
 
-(defn key-typed [state event]
+(defn move-after-key-pressed [state event]
   (let [key (:key event)]
     (cond
       (= key :left) (move-spaceship-left state)
@@ -42,6 +42,6 @@
   :size [500 500]
   :setup setup
   :draw draw-state
-  :key-typed key-typed
+  :key-pressed move-after-key-pressed
   :features [:keep-on-top]
   :middleware [m/fun-mode])
