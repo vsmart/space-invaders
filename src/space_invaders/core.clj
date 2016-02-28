@@ -3,23 +3,36 @@
             [quil.middleware :as m]))
 
 (defn setup []
-  (q/frame-rate 30)
+  (q/frame-rate 10)
   (q/color-mode :hsb)
   {:battleship
     {:x (/ (q/width) 2)
-     :y (* (q/height) 2/3)}})
+     :y (* (q/height) 4/5)}
+   :fire-count 100
+   :aliens
+     [{:x 30  :y 140}
+      {:x 60 :y 140}
+      {:x 90 :y 140}]})
 
 (defn draw-state [state]
- ; (q/background 240)
+  (q/background 0)
   (draw-battleship state)
+  (draw-aliens state)
   (print-current-state state))
 
 (defn draw-battleship [state]
   (q/fill 120 255 255)
-  (q/ellipse (:x (:battleship state)) (:y (:battleship state)) 35 15))
+  (q/ellipse (:x (:battleship state)) (:y (:battleship state)) 55 25))
+
+(defn draw-aliens [state]
+  (doseq [alien (:aliens state)] (draw-alien alien)))
+
+(defn draw-alien [alien]
+  (q/fill 40 255 255)
+  (q/rect (:x alien) (:y alien) 20 20))
 
 (defn print-current-state [state]
-  (q/fill 0 0 0)
+  (q/fill 250)
   (q/text (str state) 10 20))
 
 (defn move-spaceship [by-x by-y state]
@@ -41,12 +54,12 @@
 
 (defn fire [state]
   (loop [x (:x (:battleship state))
-         y (:y (:battleship state))]
-    (if (> 0 y)
-      state
+         y (- (:y (:battleship state)) 50)]
+    (if (> 20 y)
+      (update-in state [:fire-count] dec)
       (do
         (q/fill 200 255 255)
-        (q/ellipse x y (/ y 10) (/ y 10))
+        (q/ellipse (+ x (rand 10)) (+ y (rand 20)) (/ y 10) (/ y 10))
         (recur x (- y 5))))))
 
 (defn move-after-key-pressed [state event]
