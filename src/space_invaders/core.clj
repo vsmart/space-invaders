@@ -35,6 +35,24 @@
   (q/fill 250)
   (q/text (str state) 10 20))
 
+(defn update-state [state]
+  (move-aliens state))
+
+(defn move-aliens [state]
+  (if (> (:x (first (:aliens state))) (q/width))
+   (move-aliens-to-left-border state)
+   (move-aliens-one-step state)))
+
+(defn move-aliens-to-left-border [state]
+  (assoc state :aliens (map
+    (fn [alien] (assoc-in alien [:x] - (q/width)))
+    (:aliens state))))
+
+(defn move-aliens-one-step [state]
+  (assoc state :aliens (map
+    (fn [alien] (update-in alien [:x] + 10))
+    (:aliens state))))
+
 (defn move-spaceship [by-x by-y state]
   (let [new-state (update-in state [:battleship :x] + by-x)
         newer-state (update-in new-state [:battleship :y] + by-y)]
@@ -77,6 +95,7 @@
   :size [500 500]
   :setup setup
   :draw draw-state
+  :update update-state
   :key-pressed move-after-key-pressed
   :features [:keep-on-top]
   :middleware [m/fun-mode])

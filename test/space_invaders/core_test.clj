@@ -58,6 +58,16 @@
              (core/move-spaceship -150 -200 state)
              => {:battleship {:x -150 :y -200}} ))
 
+(def alien-state
+  {:aliens [{:x 0 :y 0}
+            {:x 10 :y 10}]})
+
+(facts "about move-aliens"
+  (fact "moves to the right"
+    (core/move-aliens-one-step alien-state)
+    => {:aliens [{:x 10 :y 0}
+                 {:x 20 :y 10}]}))
+
 (def left-key-pressed  {:key :left})
 (def right-key-pressed {:key :right})
 (def other-key-pressed {:key :c})
