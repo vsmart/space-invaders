@@ -71,10 +71,15 @@
   (move-spaceship 0 one-move state))
 
 (defn fire [state]
+  (do
+    (draw-fire state)
+    (update-in state [:fire-count] dec)))
+
+(defn draw-fire [state]
   (loop [x (:x (:battleship state))
          y (- (:y (:battleship state)) 50)]
     (if (> 20 y)
-      (update-in state [:fire-count] dec)
+      state
       (do
         (q/fill 200 255 255)
         (q/ellipse (+ x (rand 10)) (+ y (rand 20)) (/ y 10) (/ y 10))
